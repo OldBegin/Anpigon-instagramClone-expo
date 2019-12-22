@@ -30,10 +30,15 @@ const AppTabNavigator = createMaterialTopTabNavigator({
         },
       })
     },
+    ...Platform.select({
+      android:{
+        bounces: true,
+      },
+    }),
     upperCaseLabel: false,
     showIcon: true,
     showLabel: false,
-    iconStyle: { height: 100 },
+    iconStyle: { height: 50 },
     activeTintColor: '#000',
     inactiveTintColor: '#d1cece',
   },

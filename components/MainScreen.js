@@ -53,7 +53,6 @@ export default class MainScreen extends Component{
     console.log('MainScreen:',this.props)
     return(
       <AppTabContainer />
-      //<View><Text>MainScreen</Text></View>
     )
   }
 }

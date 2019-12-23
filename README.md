@@ -25,8 +25,8 @@ native-base                    //ui libreary
 ## 사용한 라이브러리 및 기능들
    
 #### createMaterialTopTabNavigator 사용
-createBottomTabNavigation 에 페이지넘김 애니메이션이 추가된 라우팅 라이브러리임.
-첫번째 인수에는 라우팅스크린을 설정하고, 두번째 인수에 옵션을 설정할 수 있음.
+createBottomTabNavigation 에 페이지넘김 애니메이션이 추가된 라우팅 라이브러리임.   
+첫번째 인수에는 라우팅스크린을 설정하고, 두번째 인수에 옵션을 설정할 수 있음.   
 
 ```js
 const AppTabNavigator = createMaterialTopTabNavigator({

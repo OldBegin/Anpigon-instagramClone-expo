@@ -7,13 +7,19 @@ export default class HomeTab extends Component {
  
   state = {
     feeds: [],
+    followings: [],
   }
 
+  // 스팀잇에서 가져온 피드를 컴퍼넌트의 마운팅 이전에 state에 저장
   componentWillMount(){
-    console.log('before Mount: ', this.state)
+    
     this.fetchFeeds().then(feeds => {
       this.setState({ feeds });
     });
+    this.fetchFollowing().then(followings => {
+      this.setState({ followings });
+    });
+
   }
 
   static navigationOptions = {
@@ -21,7 +27,7 @@ export default class HomeTab extends Component {
       <Icon name='ios-home' style={{color:tintColor}} />
     )
   }
-
+  // 스팀잇에서 피드를 가져오는 메소드 - kr 테그에서 최신글 15개를 가져옴
   fetchFeeds() {
     const data = {
       id: 1,
@@ -37,8 +43,27 @@ export default class HomeTab extends Component {
       method: 'POST',
       body: JSON.stringify(data)
     })
-      .then(res => res.json())
-      .then(res => res.result)
+      .then(response => response.json())
+      .then(json => json.result)
+  }
+
+  // 스팀잇에서 팔로잉 친구 가져와서 출력하는 메소드
+  fetchFollowing() {
+    const data = {
+      id: 2,
+      jsonrc: "2.0",
+      method: "call",
+      params: [
+        "follow_api",
+        "get_following",
+        ["anpigon", "", "blog", 10]
+      ]
+    };
+    return fetch('https://api.steemit.com', 
+    { 
+      method: 'POST', body: JSON.stringify(data) 
+    }).then(res => res.json())
+      .then(resObj => resObj.result.map(({result}) => result))
   }
 
   render() {
@@ -58,13 +83,13 @@ export default class HomeTab extends Component {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{alignItems: 'center', paddingStart: 5, paddingEnd: 5}}
           >
-            <Thumbnail style = {{marginHorizontal: 5}} source={{ uri: 'https://steemitimages.com/u/newbijohn/avatar' }} />
-            <Thumbnail style = {{marginHorizontal: 5}} source={{ uri: 'https://steemitimages.com/u/jacobyu/avatar' }} />
-            <Thumbnail style = {{marginHorizontal: 5}} source={{ uri: 'https://steemitimages.com/u/blockchainstudio/avatar' }} />
-            <Thumbnail style = {{marginHorizontal: 5}} source={{ uri: 'https://steemitimages.com/u/gomdory/avatar' }} />
-            <Thumbnail style = {{marginHorizontal: 5}} source={{ uri: 'https://steemitimages.com/u/bbooaae/avatar' }} />
-            <Thumbnail style = {{marginHorizontal: 5}} source={{ uri: 'https://steemitimages.com/u/codingman/avatar' }} />
-            <Thumbnail style = {{marginHorizontal: 5}} source={{ uri: 'https://steemitimages.com/u/bukio/avatar' }} />
+            {
+              this.state.followings.map(following => 
+                <Thumbnail 
+                  style = {{ marginHorizontal: 5 }} 
+                  source = {{ uri: `https://steemitimages.com/u/${following}/avatar` }} />
+              )
+            }
           </ScrollView>
         </View>
         <Content>

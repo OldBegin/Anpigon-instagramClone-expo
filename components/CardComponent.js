@@ -6,7 +6,7 @@ export default class CardComponent extends Component{
   render(){
     const { data } = this.props; // 피드항목 데이터
     const { image } = JSON.parse(data.json_metadata); //json_metadata에서 이미지 url을 파싱
-    console.log('in CardComponent: ', this.props.data);
+    //console.log('in CardComponent: ', this.props.data);
     return(
       <Card>
         <CardItem>

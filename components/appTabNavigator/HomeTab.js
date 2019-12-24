@@ -1,32 +1,34 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
-import { Container, Content, Icon, Thumbnail } from 'native-base';
+import { Container, Content, Icon, Thumbnail, Header, Left, Right, Body } from 'native-base';
 import CardComponent from '../CardComponent';
+import uuidV4 from 'uuid/v4';
 
 export default class HomeTab extends Component {
- 
-  state = {
+ constructor(props){
+   super(props);
+   this.state = {
     feeds: [],
     followings: [],
   }
+ }
 
   // 스팀잇에서 가져온 피드를 컴퍼넌트의 마운팅 이전에 state에 저장
-  componentWillMount(){
-    
+  componentDidMount(){
+    // console.log('componentDidMount');
     this.fetchFeeds().then(feeds => {
       this.setState({ feeds });
     });
     this.fetchFollowing().then(followings => {
       this.setState({ followings });
     });
-
   }
-
   static navigationOptions = {
     tabBarIcon: ({ tintColor })=>(
       <Icon name='ios-home' style={{color:tintColor}} />
     )
   }
+
   // 스팀잇에서 피드를 가져오는 메소드 - kr 테그에서 최신글 15개를 가져옴
   fetchFeeds() {
     const data = {
@@ -51,7 +53,7 @@ export default class HomeTab extends Component {
   fetchFollowing() {
     const data = {
       id: 2,
-      jsonrc: "2.0",
+      jsonrpc: "2.0",
       method: "call",
       params: [
         "follow_api",
@@ -59,17 +61,26 @@ export default class HomeTab extends Component {
         ["anpigon", "", "blog", 10]
       ]
     };
+    
     return fetch('https://api.steemit.com', 
     { 
       method: 'POST', body: JSON.stringify(data) 
-    }).then(res => res.json())
-      .then(resObj => resObj.result.map(({result}) => result))
+    })
+    .then(res => res.json())
+    .then((json)=>{ console.log('data', data); return json})
+    .then(json => json.result.map(({following}) => following))
   }
 
   render() {
-    console.log('rendering : ', this.state)
+    const { feeds, followings } = this.state;
+    console.log('followings in HomeTab: ', followings)
     return (
       <Container style={styles.container}> 
+      <Header style={{marginTop: 25}}>
+        <Left><Icon name='ios-camera' style={{paddingLeft: 10}} /></Left>
+        <Body><Text style={{textAlign: 'center'}}>Instagram</Text></Body>
+        <Right><Icon name='ios-send' style={{paddingRight: 10}} /></Right>
+      </Header>
         <View style={{ height: 100 }}>
           <View style={styles.storyHeader} >
               <Text>Stories</Text>
@@ -84,17 +95,22 @@ export default class HomeTab extends Component {
             contentContainerStyle={{alignItems: 'center', paddingStart: 5, paddingEnd: 5}}
           >
             {
-              this.state.followings.map(following => 
-                <Thumbnail 
+              followings.length > 0
+              ? followings.map(following => 
+                <Thumbnail
+                  key = {uuidV4()}
                   style = {{ marginHorizontal: 5 }} 
                   source = {{ uri: `https://steemitimages.com/u/${following}/avatar` }} />
               )
+              : console.log('folowings is empty')
             }
           </ScrollView>
         </View>
         <Content>
           {
-            this.state.feeds.map( feed => <CardComponent key = { feed.post_id }  data = { feed } /> )
+            feeds.length > 0
+            ? feeds.map( feed => <CardComponent key={ feed.post_id }  data={ feed } /> )
+            : console.log('feeds is empty')
           }
         </Content>
       </Container>

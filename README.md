@@ -81,3 +81,8 @@ native-base의 ui에서 <Icon> 컴퍼넌트를 가져와서 navigationOptions �
 외부의사이트의 api를 가져와서 컴퍼넌트에 적용하여 랜더링
 
 
+#3 완료
+
+In Home: ios test Ok
+In office: android test OK
+

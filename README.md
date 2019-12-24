@@ -80,6 +80,42 @@ native-base의 ui에서 <Icon> 컴퍼넌트를 가져와서 navigationOptions �
 #### fetch
 외부의사이트의 api를 가져와서 컴퍼넌트에 적용하여 랜더링
 
+```js
+componentDidMount() {
+
+    const username = 'anpigon'; // 계정명
+    this.fetchAccount(username)
+    .then(({name, post_count, json_metadata}) => {
+      const { profile } = JSON.parse(json_metadata);
+      this.setState({
+        userName: name, 
+        postCount: post_count,
+        profile: profile
+      })})
+  }
+  fetchAccount(username) {
+    const data = {
+      id: 3,
+      jsonrpc: "2.0",
+      method: "call",
+      params: [
+        "database_api",
+        "get_accounts",
+        [[username]]
+      ]
+    };
+    return fetch('https://api.steemit.com', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+      .then(res => res.json())
+      .then(res => res.result[0])
+  }
+```
+
+#### library
+
+import EntypoIcon from 'react-native-vector-icons/Entypo';
 
 #3 완료
 

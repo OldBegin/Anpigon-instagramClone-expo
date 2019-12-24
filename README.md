@@ -113,8 +113,9 @@ componentDidMount() {
   }
 ```
 
-#### library
+#### 강좌 예제에서 누락된 library
 
+- ProfileTab.js
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
 #3 완료
